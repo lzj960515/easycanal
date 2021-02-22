@@ -1,0 +1,9 @@
+server:
+  port: 8090
+canal:
+  server:
+    host: 8.129.54.157
+    port: 11111
+    destination: example
+    username: canal
+    password: canal
