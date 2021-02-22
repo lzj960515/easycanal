@@ -5,7 +5,7 @@
 
 - starter方式
 
-  - 引入`local-schema-spring-boot-starter`依赖
+  - 引入`easycanal-spring-boot-starter`依赖
 
     ```xml
      <dependency>
