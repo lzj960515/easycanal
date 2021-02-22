@@ -8,6 +8,10 @@
     <inceptionYear>2021-Now</inceptionYear>
     <packaging>pom</packaging>
 
+    <name>${project.artifactId}</name>
+    <description>easycanal</description>
+    <url>https://github.com/lzj960515/easycanal</url>
+
     <properties>
         <java.version>8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
