@@ -5,6 +5,7 @@ import com.alibaba.otter.canal.protocol.CanalEntry;
 import com.alibaba.otter.canal.protocol.Message;
 import com.github.lzj960515.core.context.EasyCanalContext;
 import com.github.lzj960515.core.enums.EventType;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit;
  * @author Zijian Liao
  * @since 1.0.0
  */
+@Slf4j
 public class CanalDataHandler {
 
     private static final int MAX_SIZE = 1024;
@@ -44,13 +46,17 @@ public class CanalDataHandler {
 
     public void process(){
         for(;;){
-            Message message = connector.getWithoutAck(MAX_SIZE, 2L, TimeUnit.SECONDS);
-            long id = message.getId();
-            List<CanalEntry.Entry> entries = message.getEntries();
-            if(id != -1 && entries.size() > 0){
-                handleMessage(entries);
+            try{
+                Message message = connector.getWithoutAck(MAX_SIZE, 2L, TimeUnit.SECONDS);
+                long id = message.getId();
+                List<CanalEntry.Entry> entries = message.getEntries();
+                if(id != -1 && entries.size() > 0){
+                    handleMessage(entries);
+                }
+                connector.ack(id);
+            }catch (Throwable e){
+                log.error("处理canal消息发生异常：", e);
             }
-            connector.ack(id);
         }
     }
 
@@ -67,8 +73,6 @@ public class CanalDataHandler {
                     throw new RuntimeException("ERROR ## parser of eromanga-event has an error , data:" + entry.toString(), e);
                 }
                 CanalEntry.EventType eventType = rowChange.getEventType();
-                System.out.printf("监听到更新，数据库：%s, 表：%s, 事件类型：%s %n", schemaName, tableName, eventType);
-
                 rowChange.getRowDatasList().forEach(rowData -> {
                     List<CanalEntry.Column> columnList;
                     if(eventType == CanalEntry.EventType.DELETE){

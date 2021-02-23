@@ -11,7 +11,7 @@
      <dependency>
             <groupId>com.github.lzj960515</groupId>
             <artifactId>easycanal-spring-boot-starter</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
      </dependency>
     ```
   - 编写配置
